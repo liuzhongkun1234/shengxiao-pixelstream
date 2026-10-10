@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <title>莽小石云流 Player</title>
+  <style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#07111d;color:#dcecff;font:14px system-ui}#stream{width:100%;height:100%;object-fit:contain;background:#02060b}.diag{position:fixed;left:16px;top:16px;z-index:3;padding:12px 14px;border:1px solid #1b6c89;border-radius:8px;background:#07111ddd;line-height:1.8}.diag b{color:#52d4ff}.hint{color:#8ba7b5}</style>
+</head>
+<body>
+  <video id="stream" audio autoplay muted playsinline webkit-playsinline></video>
+  <div class="diag"><b>源码版适配器</b><br>Signal: <span data-state="signal"></span><br>WebRTC: <span data-state="webrtc"></span><br>输入通道: <span data-state="input"></span><br>实例: <span data-state="lifecycle"></span><br>视频: <span data-state="video"></span><br><span class="hint">移动鼠标或按键会续期会话</span></div>
+  <script>const p=new URLSearchParams(location.search),u=new URL(location.href.replace(/^http/,"ws"));u.pathname="/player";u.search=new URLSearchParams({project:p.get("project")||"AA",token:p.get("token")||""});window.peerStreamSignalUrl=u.toString();</script>
+  <script src="public-share-client.js?v=6.1.0-beta.154"></script><script src="peer-stream.js?v=6.1.0-beta.154"></script><script>window.ps=new PeerStreamController(document.getElementById('stream'));window.ps.signalUrl=window.peerStreamSignalUrl;void window.ps.start();</script><script src="source-adapter.js?v=6.1.0-beta.154"></script>
+</body>
+</html>

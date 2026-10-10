@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>前端 + UE 联调 · 蓝图说明</title>
+<style>body{max-width:850px;margin:40px auto;padding:0 24px;background:#0c1421;color:#dce7f7;font:16px/1.8 system-ui}h1,h2{color:#8abaff}pre{padding:16px;background:#18263c;white-space:pre-wrap;overflow-wrap:anywhere;border-radius:8px}code{color:#91dfbc}li{margin:12px 0}aside{padding:16px;border:1px solid #42608b;border-radius:8px}</style>
+<h1>前端 + UE 双向通信测试</h1>
+<p>视频播放、发送成功和 UE 回包是三个独立状态。测试按钮只发送一条 UI Interaction 消息，不会创建 UE 实例。</p>
+<h2>一、准备蓝图</h2>
+<ol>
+<li>在关卡中的 Actor 蓝图添加与你启用插件对应的 Pixel Streaming Input 组件。Pixel Streaming 与 Pixel Streaming 2 的节点名称可能不同，请在组件上查找 UI Interaction 接收事件。</li>
+<li>在 BeginPlay 将 UI Interaction 接收事件绑定到自定义事件。收到的 Descriptor 是 JSON 字符串。</li>
+<li>使用插件提供的 JSON 字段读取节点（如 Get Json String Value）或项目现有 JSON 工具，读取 <code>command</code>、<code>ueFunction</code> 和嵌套字段 <code>jsonContent.requestId</code>。JSON 工具不支持点路径时，先读取 jsonContent 对象，再取 requestId。</li>
+<li>仅当 command 等于 <code>callUEFunc</code>、ueFunction 等于 <code>peerstreamProbe</code> 时进入测试分支。requestId 原样保留。</li>
+<li>用 JSON 序列化工具构造下面的回包，通过对应插件的 <code>Send Pixel Streaming Response</code>（或 Send Response）节点发送到当前播放器。不要写固定编号。</li>
+</ol>
+<h2>二、请求与回包</h2>
+<p>前端发送的 UI Interaction：</p>
+<pre>{"command":"callUEFunc","ueFunction":"peerstreamProbe","jsonContent":{"requestId":"本次随机编号"}}</pre>
+<p>UE 回传的 Response 字符串：</p>
+<pre>{"ueFunction":"peerstreamProbeAck","jsonContent":{"requestId":"本次随机编号"}}</pre>
+<p>jsonContent 必须是 JSON 对象，而不是再次编码的 JSON 字符串。页面只接受当前待测编号；普通消息、旧回包或其他页面的回包不会被判为成功。</p>
+<h2>三、验收与排查</h2>
+<ol>
+<li>准备 UE 推流连接，启动推流后点击“前端 + UE 联调”。确认画面和控制通道就绪。</li>
+<li>点击“发送测试消息”。收到匹配回包显示“双向通信成功”及往返毫秒数。</li>
+<li>5 秒未收到匹配回包显示超时：检查 Actor 是否在运行、接收事件是否绑定、字段和 Response 节点是否正确；超时不代表视频失败。</li>
+<li>只读模式无法发送，请先申请控制权。断线、控制权失去或离开页面会取消待测请求。</li>
+<li>另一台局域网设备使用复制的联调链接；确认局域网分享已启用，所选网卡和 Signal 端口可达。</li>
+</ol>
+<aside>关闭网页遵循现有会话策略，不会由前端强制结束 UE 编辑器。联调期间建议先关闭其他控制页面，避免占用一对一会话或控制权。不要把播放凭据或业务消息正文写入日志。</aside>
+</html>

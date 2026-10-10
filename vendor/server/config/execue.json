@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 3,
+  "id": "local",
+  "signalUrl": "ws://127.0.0.1:12188/execue",
+  "token": "474f128c5c84585bbded3b5c218c849c126edadc32a6c27e",
+  "engineToken": "2dd27b97cdeff56dbb9f4c4cec7818e89f8b25d57836878f",
+  "registryPath": "../../logs/source/execue-instance-registry.json",
+  "orphanAuditEnabled": true,
+  "orphanAuditSeconds": 30,
+  "orphanAuditMode": "report_only",
+  "allowedProjects": [],
+  "logging": {
+    "level": "info",
+    "directory": "../../logs/source"
+  }
+}

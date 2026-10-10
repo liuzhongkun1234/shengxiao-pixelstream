@@ -1,0 +1,4 @@
+# pnpm v12 用 allowBuilds 决定哪些依赖允许跑安装脚本（electron 下载二进制、esbuild 安装原生程序）
+allowBuilds:
+  electron: true
+  esbuild: true

@@ -1,0 +1,14 @@
+# 依赖与构建产物
+node_modules/
+dist/
+release/
+
+# 打包出的安装包/便携版（体积大，不进仓库）
+*.exe
+*.blockmap
+*.7z
+
+# 日志与临时文件
+*.log
+.DS_Store
+Thumbs.db

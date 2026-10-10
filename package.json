@@ -1,0 +1,64 @@
+{
+  "name": "shengxiao-pixelstream",
+  "productName": "圣效像素流",
+  "version": "0.4.3",
+  "private": true,
+  "description": "圣效像素流 · UE 像素流局域网交付工具",
+  "main": "dist/main/index.js",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "start": "npm run build && electron .",
+    "dist": "node scripts/build.mjs && electron-builder --win portable nsis"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.0"
+  },
+  "build": {
+    "appId": "com.shengxiao.pixelstream",
+    "productName": "圣效像素流",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "vendor/server",
+        "to": "server"
+      },
+      {
+        "from": "vendor/official",
+        "to": "official"
+      }
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        "portable",
+        "nsis"
+      ]
+    },
+    "portable": {
+      "artifactName": "圣效像素流-便携版-${version}.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "圣效像素流",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "圣效像素流-安装包-${version}.exe"
+    }
+  }
+}

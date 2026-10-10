@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 3,
+  "host": "0.0.0.0",
+  "port": 12188,
+  "iceServers": [
+    {
+      "urls": [
+        "stun:turn.mangxiaoshi.com:3478",
+        "stun:stun.cloudflare.com:3478"
+      ]
+    }
+  ],
+  "sharing": {
+    "enabled": true,
+    "preferredAddress": ""
+  },
+  "deployment": {
+    "mode": "local-test"
+  },
+  "performance": {
+    "mode": "auto",
+    "profiles": {
+      "balanced": {
+        "resX": 1920,
+        "resY": 1080,
+        "fps": 30,
+        "maxBitrateMbps": 50
+      },
+      "performance": {
+        "resX": 1920,
+        "resY": 1080,
+        "fps": 30,
+        "maxBitrateMbps": 30
+      }
+    }
+  },
+  "bitrateControl": {
+    "qualityTiers": {
+      "lan": {
+        "quality": 50,
+        "balanced": 40,
+        "smooth": 30
+      },
+      "public": {
+        "quality": 30,
+        "balanced": 30,
+        "smooth": 8
+      },
+      "turn": {
+        "quality": 20,
+        "balanced": 15,
+        "smooth": 10
+      },
+      "mobile": {
+        "quality": 20,
+        "balanced": 20,
+        "smooth": 8
+      }
+    },
+    "mode": "auto",
+    "minimumMbps": 5,
+    "lanP2p": [
+      50,
+      40,
+      30
+    ],
+    "publicP2p": [
+      30,
+      25,
+      20
+    ],
+    "turn": [
+      20,
+      15,
+      10
+    ],
+    "turnMaximumMbps": 20,
+    "mobileLanMaximumMbps": 15,
+    "mobilePublicMaximumMbps": 20,
+    "mobileTurnMaximumMbps": 10,
+    "decreaseFactor": 0.8,
+    "increaseStepMbps": 2,
+    "recoveryStableSeconds": 25,
+    "increaseIntervalSeconds": 25,
+    "codecFactorMode": "manual",
+    "codecFactors": {
+      "H264": 1,
+      "AV1": 0.7
+    },
+    "defaultAv1Factors": {
+      "lanP2p": 1,
+      "publicP2p": 0.8,
+      "turn": 0.8
+    }
+  },
+  "codecSelection": {
+    "mode": "public-auto",
+    "observationOnly": false,
+    "experimentalAv1": false,
+    "allowMobileAv1": false,
+    "fallbackCodec": "H264",
+    "fallbackCooldownMinutes": 30
+  },
+  "publicDir": "../public",
+  "publicAccess": {
+    "enabled": false,
+    "trustedProxyIps": [
+      "127.0.0.1",
+      "::1"
+    ],
+    "turn": {
+      "enabled": false,
+      "urls": [
+        "turn:turn.mangxiaoshi.com:3478?transport=udp",
+        "turn:turn.mangxiaoshi.com:3478?transport=tcp"
+      ],
+      "ttlSeconds": 3600,
+      "forceRelay": false
+    },
+    "costProtection": {
+      "maxPublicSessions": 5,
+      "maxTurnSessions": 1,
+      "maxSessionMinutes": 60,
+      "maxTurnGBPerDay": 20,
+      "trafficOverheadFactor": 1.1,
+      "timeZone": "Asia/Shanghai"
+    }
+  },
+  "auth": {
+    "playerToken": "a2c58996264877459fd61451a327c6260a0bcea7b79c4d10",
+    "viewerToken": "3ebc3c3176131246f03a794b271745f3478053395855d2a7",
+    "engineToken": "e627ee648ac29283c7933956f1c4a523e58c5970a670e58c",
+    "execueToken": "9f5895fd1ec3b6c6c1d77b47cea8fb79948c65ec7663e9a5",
+    "adminToken": "338173f352208c18d3421e4868bba211d28b673e87e61a92"
+  },
+  "session": {
+    "mode": "one2one",
+    "userIdleSeconds": 0,
+    "idleWarningSeconds": 20,
+    "publicP2pIdleSeconds": 300,
+    "publicTurnIdleSeconds": 120,
+    "publicIdleWarningSeconds": 30,
+    "networkRecoverySeconds": 10,
+    "maxSharedPlayers": 5,
+    "lastPlayerExitPolicy": "idle",
+    "idleInstanceSeconds": 1800,
+    "strictMatchIP": false,
+    "queueFairUseMinutes": 0,
+    "fairUseWarningSeconds": 20,
+    "maxSessionMinutes": 0,
+    "maxSessionWarningSeconds": 20,
+    "queueMaxWaitMinutes": 0
+  },
+  "instance": {
+    "engineConnectTimeoutSeconds": 60,
+    "coldStartTimeoutSeconds": 90,
+    "engineTimeoutExtensionSeconds": 30,
+    "serviceStartTimeoutSeconds": 30,
+    "serviceRecoverySeconds": 60
+  },
+  "rendering": {
+    "fps": 30,
+    "resX": 1920,
+    "resY": 1080,
+    "maxBitrateMbps": 50,
+    "unattended": true,
+    "renderOffScreen": true,
+    "audioMixer": true,
+    "adaptiveResolution": true,
+    "screenPercentage": 100,
+    "hideCursor": false
+  },
+  "security": {
+    "adminLocalOnly": true,
+    "cors": false,
+    "allowedPlayerIps": []
+  },
+  "projects": [],
+  "logging": {
+    "level": "info",
+    "directory": "../../logs/source",
+    "retentionDays": 30,
+    "maxFileSizeMB": 20,
+    "consoleEnabled": true,
+    "fileEnabled": true
+  }
+}

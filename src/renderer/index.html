@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'" />
+  <title>圣效像素流</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- 侧栏：项目列表 -->
+    <aside id="sidebar">
+      <div class="side-head">
+        <h1><span class="mark"></span>圣效像素流</h1>
+        <span class="sub">局域网像素流控制台</span>
+      </div>
+      <button id="btn-add" class="btn primary block">＋ 添加项目</button>
+      <ul id="project-list"></ul>
+      <div class="side-foot">
+        <!-- 电脑状态：CPU / 内存 / 显存 -->
+        <div id="sys-panel" title="电脑状态">
+          <div class="sys-row">
+            <span class="sys-label">CPU</span>
+            <div class="sys-bar"><div id="sys-cpu-bar"></div></div>
+            <span class="sys-val" id="sys-cpu-val">–</span>
+          </div>
+          <div class="sys-row">
+            <span class="sys-label">内存</span>
+            <div class="sys-bar"><div id="sys-mem-bar"></div></div>
+            <span class="sys-val" id="sys-mem-val">–</span>
+          </div>
+          <div class="sys-row" id="sys-gpu-row">
+            <span class="sys-label">显存</span>
+            <div class="sys-bar"><div id="sys-gpu-bar"></div></div>
+            <span class="sys-val" id="sys-gpu-val">–</span>
+          </div>
+        </div>
+        <button id="btn-settings" class="btn ghost block">⚙ 设置</button>
+      </div>
+    </aside>
+
+    <!-- 主区域 -->
+    <main id="main">
+      <!-- 运行中的项目（支持多项目并发） -->
+      <section id="runs-panel">
+        <div class="runs-head">
+          <span id="runs-title">运行中的项目</span>
+          <button id="btn-stop-all" class="btn danger small" disabled>■ 停止全部</button>
+        </div>
+        <div id="runs-list"></div>
+      </section>
+
+      <!-- 控制条 -->
+      <section id="control">
+        <button id="btn-start" class="btn primary big" disabled>▶ 启动</button>
+        <span id="status-msg" class="muted"></span>
+      </section>
+
+      <!-- 日志 -->
+      <section id="log-panel">
+        <div class="log-head">
+          <span>运行日志</span>
+          <button id="btn-clear-log" class="btn ghost small">清空</button>
+        </div>
+        <div id="log-view"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 设置弹窗 -->
+  <div id="modal-mask" class="hidden">
+    <div id="modal">
+      <h2>设置</h2>
+
+      <div class="group">
+        <div class="group-title">服务器</div>
+        <label class="field">
+          <span>服务器模式</span>
+          <select id="set-mode">
+            <option value="auto">自动（优先内置服务，找不到再用官方）</option>
+            <option value="peerstream">只用内置服务（推荐，功能全）</option>
+            <option value="epic">只用官方 SignallingWebServer（内置，官方播放页）</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>内置服务器目录（留空 = 自动探测）</span>
+          <div class="row">
+            <input type="text" id="set-psdir" placeholder="...\PeerStreamSource" />
+            <button id="btn-pick-psdir" class="btn ghost">浏览</button>
+          </div>
+        </label>
+        <label class="field">
+          <span>Epic 信令服务器目录（留空 = 从打包目录自动探测）</span>
+          <div class="row">
+            <input type="text" id="set-sigdir" placeholder="...\SignallingWebServer" />
+            <button id="btn-pick-dir" class="btn ghost">浏览</button>
+          </div>
+        </label>
+        <div class="row-two">
+          <label class="field">
+            <span>播放页端口（HTTP）</span>
+            <input type="number" id="set-httpport" min="1" max="65535" />
+          </label>
+          <label class="field">
+            <span>Streamer 端口（Epic 模式）</span>
+            <input type="number" id="set-streamport" min="1" max="65535" />
+          </label>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-title">启动与运行</div>
+        <label class="field check">
+          <input type="checkbox" id="set-autostart" />
+          <span>打开程序后自动在后台启动上次的项目（推荐：打开浏览器时画面已就绪）</span>
+        </label>
+        <label class="field check">
+          <input type="checkbox" id="set-silentue" />
+          <span>UE 后台运行：完全隐藏窗口和控制台（推荐；5.8 项目自动改用透明窗口）</span>
+        </label>
+        <label class="field check">
+          <input type="checkbox" id="set-offscreen" />
+          <span>后台无窗口运行（-RenderOffscreen，最小化也不停渲；5.8 项目不适用）</span>
+        </label>
+        <label class="field">
+          <span>UE 附加启动参数</span>
+          <input type="text" id="set-ueargs" placeholder="例：-windowed -resx=1280 -resy=720" />
+        </label>
+        <label class="field">
+          <span>信令服务器附加参数</span>
+          <input type="text" id="set-sigargs" placeholder="例：--peerConnectionOptions=stun.json" />
+        </label>
+      </div>
+
+      <div class="group">
+        <div class="group-title">网络与随系统启动</div>
+        <label class="field check">
+          <input type="checkbox" id="set-lanmode" />
+          <span>局域网模式（不使用外网 STUN/TURN，建连更快；跨公网时取消勾选）</span>
+        </label>
+        <label class="field check">
+          <input type="checkbox" id="set-autolaunch" />
+          <span>开机自动启动（随 Windows 登录静默后台运行）</span>
+        </label>
+      </div>
+
+      <div class="modal-foot">
+        <button id="btn-clear-cache" class="btn danger">清除缓存</button>
+        <button id="btn-firewall" class="btn ghost">放通防火墙（局域网）</button>
+        <span class="foot-gap"></span>
+        <button id="btn-settings-close" class="btn ghost">取消</button>
+        <button id="btn-settings-save" class="btn primary">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

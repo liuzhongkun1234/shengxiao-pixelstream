@@ -1,0 +1,19 @@
+{
+  "name": "peerstream-source-services",
+  "version": "6.1.0-beta.154",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "start:signal": "node src/signal/index.js",
+    "start:execue": "node src/execue/index.js",
+    "check": "node --check src/signal/index.js && node --check src/execue/index.js && node --check public/public-share-client.js && node --check public/source-adapter.js && node --check test/admin-client.js && node --check test/cdp-probe.js && node --check test/control-role-probe.js",
+    "test": "node test/run-tests.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
